@@ -1,6 +1,6 @@
 # Utveckling för Androidplattformar 25 yhp - 2021 VT
 
-- Inlämningsuppgift 1-3
+- Övningsuppgiter 1-3
 
 - Projekt 
 
