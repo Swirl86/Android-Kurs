@@ -1,16 +1,12 @@
 package com.example.shakeacceleration;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentContainerView;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -22,9 +18,6 @@ public class MainActivity extends AppCompatActivity  {
     private TextView textView;
     private long rotatedTimeStamp = 0;
 
-    static Context context;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +26,6 @@ public class MainActivity extends AppCompatActivity  {
         accelerometer = new MainFragment(this);
         fragmentContainerView = (FragmentContainerView) findViewById(R.id.id_fragment_container_view);
         textView = (TextView) findViewById(R.id.id_info_text_view);
-
-        context = getApplicationContext();
 
         accelerometer.setListener(new MainFragment.Listener() {
             @Override
@@ -54,6 +45,7 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();

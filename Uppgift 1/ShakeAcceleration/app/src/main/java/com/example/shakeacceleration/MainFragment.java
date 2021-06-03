@@ -6,13 +6,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 public class MainFragment extends Fragment {
 
@@ -26,14 +24,13 @@ public class MainFragment extends Fragment {
         this.listener = listener;
     }
 
-    private SensorManager sensorManager;
-    private Sensor sensor;
+    private SensorManager sensorManager; // Handel's the sensors
+    private Sensor sensor;      // Handler
     private SensorEventListener sensorEventListener;
 
     public MainFragment() {
         // Required empty public constructor
        // Log.d("myTag", "Fragment Starting!");
-
     }
 
     public MainFragment(Context context) {
@@ -42,7 +39,7 @@ public class MainFragment extends Fragment {
         sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                if(listener != null) {
+                if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     listener.onTranslation(event.values[0], event.values[1], event.values[2]);
                 }
             }
