@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">LifeCycle</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_login">Login</string>
+    <string name="welcome">Welcome,</string>
+    <string name="invalid_input">Wrong input, try again!</string>
+    <string name="sign_in">Sign in to continue!</string>
+    <string name="remember_me">Remember me</string>
+    <string name="form_title">Please,</string>
+    <string name="form_sub_title">Fill out the form.</string>
+    <string name="prompt_full_name"><font color='#FF0000'>*&#160;</font>Full Name</string>
+    <string name="prompt_hobbies">Hobbies</string>
+    <string name="form_gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+    <string name="form_country">Country</string>
+    <string name="action_submit">Submit</string>
+    <string name="information_agreement">I agree to let my data be stored according to GDPR.</string>
+    <string name="checkbox_agreement">I Agree</string>
+    <string name="saved_form_title">Saved Form,</string>
+    <string name="saved_form_subtitle">Overview for &#160;</string>
+    <string name="decorative_img_desc">Decorative Image</string>
+    <string name="delete_icon_desc">Delete saved form data</string>
+
+    <array name="countries">
+        <item>Sweden</item>
+        <item>Norway</item>
+        <item>Germany</item>
+        <item>Italy</item>
+        <item>Spain</item>
+        <item>Switzerland</item>
+        <item>Belgium</item>
+        <item>Unknown</item>
+    </array>
+</resources>
