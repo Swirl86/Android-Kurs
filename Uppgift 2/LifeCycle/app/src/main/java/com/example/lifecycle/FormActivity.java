@@ -28,6 +28,8 @@ public class FormActivity extends OptionsMenuActivity {
     private Context context;
     private Intent intent;
 
+    private DBHelper db;
+
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
@@ -53,18 +55,11 @@ public class FormActivity extends OptionsMenuActivity {
                         String country = countriesSpinner.getSelectedItem().toString();
                         String gender = getGenderOption();
 
-                        Bundle bundle = new Bundle();
+                        String email = sharedPreferences.getString("Email", "noEmail@sight.com");
 
-                        bundle.putString("name", name);
-                        bundle.putString("hobbies", hobbies);
-                        bundle.putString("country", country);
-                        bundle.putString("gender", gender);
+                        UserDetailsEntity details = new UserDetailsEntity(email, name, hobbies, country, gender);
+                        db.insertUserDetails(details);
 
-                        saveBundleInformation(bundle);
-
-                        intent = new Intent(FormActivity.this, SavedFormsActivity.class);
-                        intent.putExtra("formBundle", bundle);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     } else {
@@ -80,7 +75,10 @@ public class FormActivity extends OptionsMenuActivity {
     private void initValues() {
 
         context = getApplicationContext();
-        sharedPreferences = getApplicationContext().getSharedPreferences("UserDB", MODE_PRIVATE);
+        db = new DBHelper(context);
+        intent = new Intent(FormActivity.this, SavedFormsActivity.class);
+
+        sharedPreferences = context.getSharedPreferences("localPref", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         edtTxtName = (EditText) findViewById(R.id.formName);
@@ -93,12 +91,6 @@ public class FormActivity extends OptionsMenuActivity {
         agreeChecked = (CheckBox) findViewById(R.id.checkBoxAgreement);
     }
 
-    private void saveBundleInformation(Bundle bundle) {
-        for (String key : bundle.keySet()) {
-            editor.putString(key, (String) bundle.get(key));
-        }
-        editor.apply();
-    }
 
     private String getGenderOption() {
         String gender = "";

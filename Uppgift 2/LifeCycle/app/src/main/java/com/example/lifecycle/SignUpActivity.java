@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (userExists) {
                         makeToast("User already exists \uD83D\uDE44 \nPlease Login");
                     } else {
-                        Boolean sigUpResult = db.insertData(emailInput, passwordInput);
+                        Boolean sigUpResult = db.insertUserData(emailInput, passwordInput);
                         handleResult(sigUpResult);
                     }
                 }
@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void handleResult(Boolean newUser) {
         String msg = newUser ? "Sign Up Successful \uD83D\uDC4D" : "Sign Up Failed \uD83D\uDCA9";
         makeToast(msg);
-        
+
         if (newUser) {
             intent = new Intent(SignUpActivity.this, LogInActivity.class);
             startActivity(intent);

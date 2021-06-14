@@ -41,7 +41,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
                 return true;
             case R.id.action_logout:
                 //("Logout option selected");
-                sharedPreferences = this.getSharedPreferences("UserDB", MODE_PRIVATE);
+                sharedPreferences = this.getSharedPreferences("localPref", MODE_PRIVATE);
                 sharedPreferencesEditor = sharedPreferences.edit();
 
                 sharedPreferencesEditor.putString("RememberMe", "false");

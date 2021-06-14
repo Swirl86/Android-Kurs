@@ -29,6 +29,8 @@ public class LogInActivity extends AppCompatActivity {
     private Context context;
     private Intent intent;
 
+    private DBHelper db;
+
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
@@ -41,8 +43,9 @@ public class LogInActivity extends AppCompatActivity {
         initValues();
 
         String loggedIn = sharedPreferences.getString("RememberMe", "");
+        String emailSP = sharedPreferences.getString("Email", "");
 
-        if (loggedIn.equals("true")) {
+        if (loggedIn.equals("true") && !emailSP.equals("")) {
             intent = new Intent(LogInActivity.this, FormActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -56,12 +59,11 @@ public class LogInActivity extends AppCompatActivity {
                 String inputEmail = email.getText().toString();
                 String inputPassword = password.getText().toString();
 
-                if (valid(inputEmail, inputPassword)) {
-
-                    editor.putString("email", inputEmail);
+                //if (valid(inputEmail, inputPassword)) {
+                if (db.checkEmailPassword(inputEmail, inputPassword)) {
+                    editor.putString("Email", inputEmail);
                     editor.apply();
 
-                    intent = new Intent(LogInActivity.this, FormActivity.class);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     makeToast("Login successful \uD83D\uDC4D");
@@ -96,6 +98,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private void initValues() {
         context = getApplicationContext();
+        intent = new Intent(LogInActivity.this, FormActivity.class);
 
         signUpLink = findViewById(R.id.signUpLink);
         email = findViewById(R.id.loginEmail);
@@ -103,8 +106,10 @@ public class LogInActivity extends AppCompatActivity {
         rememberMe = findViewById(R.id.rememberMe);
         login = findViewById(R.id.loginButton);
 
-        sharedPreferences = context.getSharedPreferences("UserDB", MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("localPref", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+        db = new DBHelper(context);
     }
 
     private boolean valid(String inputEmail, String inputPassword) {
