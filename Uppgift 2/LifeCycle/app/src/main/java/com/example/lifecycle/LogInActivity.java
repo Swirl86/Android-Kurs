@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class LogInActivity extends AppCompatActivity {
     private final String USER_EMAIL = "admin@test.com";
     private final String USER_PASSWORD = "123456";
 
+    private TextView signUpLink;
     private EditText email, password;
     private CheckBox rememberMe;
     private MaterialCardView login;
@@ -43,6 +45,7 @@ public class LogInActivity extends AppCompatActivity {
         if (loggedIn.equals("true")) {
             intent = new Intent(LogInActivity.this, FormActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
             makeToast("You are already logged in \uD83D\uDC96");
         }
@@ -60,6 +63,7 @@ public class LogInActivity extends AppCompatActivity {
 
                     intent = new Intent(LogInActivity.this, FormActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     makeToast("Login successful \uD83D\uDC4D");
                 } else {
                     makeToast("Wrong input, try again \uD83D\uDCA9");
@@ -78,13 +82,24 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
+        signUpLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(LogInActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                makeToast("Please Sign Up");
+            }
+        });
+
     }
 
     private void initValues() {
         context = getApplicationContext();
 
-        email = findViewById(R.id.loginemail);
-        password = findViewById(R.id.formHobbies);
+        signUpLink = findViewById(R.id.signUpLink);
+        email = findViewById(R.id.loginEmail);
+        password = findViewById(R.id.loginPassword);
         rememberMe = findViewById(R.id.rememberMe);
         login = findViewById(R.id.loginButton);
 

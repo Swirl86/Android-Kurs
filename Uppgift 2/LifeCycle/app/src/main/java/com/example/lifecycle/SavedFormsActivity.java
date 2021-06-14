@@ -61,7 +61,6 @@ public class SavedFormsActivity extends OptionsMenuActivity {
                 } else {
                     Toast.makeText(context, "Nothing to delete \uD83D\uDE44", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }

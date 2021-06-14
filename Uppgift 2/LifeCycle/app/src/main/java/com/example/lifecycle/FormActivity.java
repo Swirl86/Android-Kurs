@@ -66,6 +66,7 @@ public class FormActivity extends OptionsMenuActivity {
                         intent.putExtra("formBundle", bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     } else {
                         makeToast("Please, enter your name \uD83D\uDCA9");
                     }

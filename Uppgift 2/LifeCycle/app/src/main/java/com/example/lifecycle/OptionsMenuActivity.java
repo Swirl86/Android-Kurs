@@ -31,11 +31,13 @@ public class OptionsMenuActivity extends AppCompatActivity {
                 //makeToast("Form option selected");
                 intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             case R.id.action_saved:
                 //makeToast("Saved option selected");
                 intent = new Intent(OptionsMenuActivity.this, SavedFormsActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             case R.id.action_logout:
                 //("Logout option selected");
@@ -47,6 +49,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
 
                 intent = new Intent(OptionsMenuActivity.this, LogInActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             default:
                 return super.onOptionsItemSelected(item);
         }

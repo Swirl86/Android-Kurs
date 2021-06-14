@@ -6,38 +6,40 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="25dp"
     android:layout_marginRight="25dp"
-    android:weightSum="6"
+    android:weightSum="7"
     android:orientation="vertical"
     tools:context=".SignUpActivity">
 
     <LinearLayout
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/roboto_bold"
-            android:textSize="35dp"
-            android:text="Create Account," />
+            android:padding="5dp"
+            android:text="@string/signup_title"
+            android:textColor="@color/black"
+            android:textSize="35sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
             android:padding="5dp"
-            android:text="Sign up to get started!"
+            android:text="@string/signup_subtitle"
             android:textColor="@color/gray"
             android:textSize="20sp" />
     </LinearLayout>
 
+
     <LinearLayout
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -46,38 +48,52 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginTop="7dp"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signupemail"
-                android:lines="1"
-                android:inputType="textEmailAddress"
-                android:hint="Email"
+                android:id="@+id/signupEmail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:lines="1"
+                android:text="admin@test.com" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="15dp"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/purple_500"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signuppassword"
-                android:lines="1"
-                android:inputType="textPassword"
-                android:hint="Password"
+                android:id="@+id/signupPassword"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:text="123456" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="15dp"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/purple_500"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signupRePassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/prompt_password_rep"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:text="123456" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -91,7 +107,7 @@
         android:backgroundTintMode="src_over">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/loginButton"
+            android:id="@+id/signUpBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
@@ -103,19 +119,23 @@
                 android:background="@drawable/gradient"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center"
-                android:text="@string/action_login"
+                android:text="@string/action_signup"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
 
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:id="@+id/loginLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center"
+            android:text="@string/signup_already_member"
+            android:textColor="@color/black"
+            android:focusable="true" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_bold"
-        android:gravity="center"
-        android:text="I'm already a member, Sign In"
-        android:textColor="@color/black" />
 </LinearLayout>

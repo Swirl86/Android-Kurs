@@ -1,28 +1,34 @@
 <resources>
     <string name="app_name">LifeCycle</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_email"><font color='#FF0000'>*&#160;</font>Email</string>
+    <string name="prompt_password"><font color='#FF0000'>*&#160;</font>Password</string>
+    <string name="prompt_password_rep"><font color='#FF0000'>*&#160;</font>Re-Enter Password</string>
+    <string name="prompt_full_name"><font color='#FF0000'>*&#160;</font>Full Name</string>
+    <string name="prompt_signup">New user? <font color="blue"><u>Sign Up</u></font></string>
+    <string name="prompt_hobbies">Hobbies</string>
     <string name="action_login">Login</string>
+    <string name="action_submit">Submit</string>
+    <string name="action_signup">Sign Up</string>
     <string name="welcome">Welcome,</string>
     <string name="invalid_input">Wrong input, try again!</string>
     <string name="sign_in">Sign in to continue!</string>
     <string name="remember_me">Remember me</string>
     <string name="form_title">Please,</string>
     <string name="form_sub_title">Fill out the form.</string>
-    <string name="prompt_full_name"><font color='#FF0000'>*&#160;</font>Full Name</string>
-    <string name="prompt_hobbies">Hobbies</string>
+    <string name="form_country">Country</string>
     <string name="form_gender">Gender</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
     <string name="gender_other">Other</string>
-    <string name="form_country">Country</string>
-    <string name="action_submit">Submit</string>
     <string name="information_agreement">I agree to let my data be stored according to GDPR.</string>
     <string name="checkbox_agreement">I Agree</string>
     <string name="saved_form_title">Saved Form,</string>
     <string name="saved_form_subtitle">Overview for &#160;</string>
     <string name="decorative_img_desc">Decorative Image</string>
     <string name="delete_icon_desc">Delete saved form data</string>
+    <string name="signup_already_member">Already a member? <font color="blue"><u>Back to login</u></font></string>
+    <string name="signup_title">Create Account,</string>
+    <string name="signup_subtitle">Sign up to get started</string>
 
     <array name="countries">
         <item>Sweden</item>

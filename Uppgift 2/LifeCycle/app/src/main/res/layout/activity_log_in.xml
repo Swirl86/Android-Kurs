@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="25dp"
     android:layout_marginRight="25dp"
-    android:weightSum="6"
+    android:weightSum="7"
     android:orientation="vertical"
     tools:context=".LogInActivity">
 
@@ -38,7 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginemail"
+                android:id="@+id/loginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/prompt_email"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/formHobbies"
+                android:id="@+id/loginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/prompt_password"
@@ -116,5 +116,17 @@
                 android:textColor="@color/white"
                 android:textSize="25sp" />
         </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/signUpLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center"
+            android:text="@string/prompt_signup"
+            android:textColor="@color/black"
+            android:focusable="true" />
     </RelativeLayout>
 </LinearLayout>
