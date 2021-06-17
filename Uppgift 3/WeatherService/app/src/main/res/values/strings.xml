@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">WeatherService</string>
+    <string name="main_title">Location</string>
+    <string name="sub_title">Date Time</string>
+    <string name="error_msg">Something went wrong</string>
+    <string name="img_desc">Current weather image</string>
+    <string name="weather_title">Weather</string>
+    <string name="temp_title">24°C</string>
+    <string name="min_temp">Min temp</string>
+    <string name="max_temp">Max temp</string>
+    <string name="prompt_city">City Name</string>
+    <string name="prompt_extra">Country / Zip Code</string>
+    <string name="action_btn">Submit</string>
+</resources>
