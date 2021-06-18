@@ -65,13 +65,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(WeatherAdapter.ViewHolder holder, int position) {
-
-        /*Log.d("position", "onBindViewHolder: " + localWeatherEntitys.get(position).getLocation());
-        Log.d("ViewHolder", "onBindViewHolder: " + localWeatherEntitys.get(position).getCountry());
-        Log.d("ViewHolder", "onBindViewHolder: " + localWeatherEntitys.get(position).getStatus());
-        Log.d("ViewHolder", "onBindViewHolder: " + localWeatherEntitys.get(position).getWeatherImage());*/
-
-        //Log.d("position", "position: " + position);
         holder.getLocationValue().setText(localWeatherEntitys.get(position).getLocation());
         holder.getCountryValue().setText(localWeatherEntitys.get(position).getCountry());
         holder.getWeatherValue().setText(localWeatherEntitys.get(position).getStatus());
@@ -82,7 +75,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-       // Log.d("ADA", "getItemCount: " + localWeatherEntitys.size());
         return localWeatherEntitys.size();
     }
 }

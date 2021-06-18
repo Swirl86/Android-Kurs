@@ -3,9 +3,12 @@ package com.example.weatherservice;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +35,8 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String url = "https://api.openweathermap.org/data/2.5/weather?q=";
+
+    // Update openweathermap Key number below
     private final String key = "099eff339f56d6a29a9823857b2f2671";
 
     private final String celsius = "°C";
@@ -53,9 +58,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initValues();
+        setAlarm();
 
         submitBtn.setOnClickListener(this);
         historyBtn.setOnClickListener(this);
+
     }
 
     private void initValues() {
@@ -80,24 +87,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        //String getURL = "https://api.openweathermap.org/data/2.5/weather?q=malmo,se&units=metric&APPID=099eff339f56d6a29a9823857b2f2671&mode=json";
-
         switch (view.getId()) {
             case R.id.submitBtn:
-                onClickHandleSubmit();
+                onClickHandleSubmit("");
                 break;
             case R.id.historyBtn:
-                onClickHandleHistory();
+                onClickHandleHistory(view);
                 break;
             default:
                 break;
         }
     }
 
-    private void onClickHandleSubmit() {
+    public void onClickHandleSubmit(String repeatFetchLoc) {
         String input = inputCity.getText().toString();
 
-        if(input.equals("")){
+        if (input.equals("")) {
             Toast.makeText(this, "Enter City Name!", Toast.LENGTH_SHORT).show();
         } else {
 
@@ -113,8 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-
-                                // Log.d("volley", "onResponse: " + response);
                                 String timeStamp = getTimeStamp();
                                 timeTitle.setText(timeStamp);
 
@@ -124,8 +127,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 setWeatherValues(weatherArray);
 
-                                String loc = response.get("name").toString();
-                                location = loc.substring(0, 1).toUpperCase() + loc.substring(1);
+                                String loc = repeatFetchLoc;
+                                if(loc.equals("")){
+                                    loc = response.get("name").toString();
+                                    location = loc.substring(0, 1).toUpperCase() + loc.substring(1);
+                                }
+
 
                                 String country = countryJSONObject.getString("country");
                                 locationTitle.setText(location + " " + country);
@@ -170,25 +177,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void onClickHandleHistory() {
+    public void onClickHandleHistory(View view) {
         Intent intent = new Intent(this, WeatherListActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
-
-        String tmp = dBhelper.getLatestEntry();
-
-        // TODO set alarmmanager for last location
     }
 
 
-    private void setWeatherValues(JSONArray weatherArray) throws JSONException {
+    public void setWeatherValues(JSONArray weatherArray) throws JSONException {
         String icon = "";
 
         for (int i = 0; i < weatherArray.length(); i++) {
             JSONObject weatherJSONObject = weatherArray.getJSONObject(i);
             weather = weatherJSONObject.getString("description");
-            if(!weather.equals("")){
+            if (!weather.equals("")) {
                 weather = weather.substring(0, 1).toUpperCase() + weather.substring(1);
             }
             status.setText(weather);
@@ -200,10 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     centerCrop().into(weatherImage);
 
         }
-       // iconUrl = "https://openweathermap.org/img/wn/" + icon + "@4x.png";
+        // Different image types
+        // iconUrl = "https://openweathermap.org/img/wn/" + icon + "@4x.png";
     }
 
-    private String getTimeStamp() {
+    public String getTimeStamp() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         return formatter.format(date);
@@ -217,10 +220,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bundle.putString("weather", weather);
         bundle.putString("iconUrl", iconUrl);
 
-        Intent intent  = new Intent(this, ForegroundService.class);
+        Intent intent = new Intent(this, ForegroundService.class);
         intent.putExtra("weatherInfo", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);  // Needed?
-        ContextCompat.startForegroundService(this,intent);
+        ContextCompat.startForegroundService(this, intent);
 
+    }
+
+
+    public void setAlarm() {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(context, BootReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        long thirtySecondsFromNow = System.currentTimeMillis() + 30 * 1000;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, thirtySecondsFromNow , pendingIntent);
     }
 }

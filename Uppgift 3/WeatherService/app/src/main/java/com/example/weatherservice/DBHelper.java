@@ -38,8 +38,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        // Delete database
-        //context.deleteDatabase("Login.db");
     }
 
     @Override
@@ -78,11 +76,6 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             result = db.insert(TABLE_WEATHER, null, contentValues);
         }
-
-       /* cursor = db.rawQuery("SELECT min(entry_id) FROM " + TABLE_WEATHER, null);
-        if (cursor.moveToFirst()) {
-            System.out.println(cursor.getString(cursor.getColumnIndex("entry_id")));
-        }*/
 
         // -1 something went wrong
         return result == -1 ? false : true;
@@ -124,7 +117,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        Log.d("WE-tag", "getWeatherList: " + valueEntitys.size());
         return valueEntitys;
     }
 
@@ -136,8 +128,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String value = "";
         if (cursor.moveToFirst()) {
-            value = cursor.getString(cursor.getColumnIndex(KEY_LOCATION))
-                    + ", " + cursor.getString(cursor.getColumnIndex(KEY_COUNTRY));
+            value = cursor.getString(cursor.getColumnIndex(KEY_LOCATION));
+                   // + ", " + cursor.getString(cursor.getColumnIndex(KEY_COUNTRY));
         }
 
         return value;
@@ -148,7 +140,5 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("DELETE FROM "+ TABLE_WEATHER);
         db.close();
-
-        //long nrOfRows = DatabaseUtils.queryNumEntries(db,TABLE_WEATHER);
     }
 }
