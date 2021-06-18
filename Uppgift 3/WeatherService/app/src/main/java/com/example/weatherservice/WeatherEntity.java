@@ -17,10 +17,10 @@ public class WeatherEntity {
         this.country = "country";
         this.time = "time";
         this.status = "status";
-        this.temp = "temp";
+        this.temp = "temperature";
         this.tempMin = "tempMin";
         this.tempMax = "tempMax";
-        this.weatherImage = "weatherImage";
+        this.weatherImage = "image";
     }
 
     public WeatherEntity(String location, String country, String time, String status, String temp, String tempMin,

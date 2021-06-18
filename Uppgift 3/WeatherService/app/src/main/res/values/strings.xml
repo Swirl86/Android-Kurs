@@ -10,5 +10,7 @@
     <string name="max_temp">Max temp</string>
     <string name="prompt_city">City Name</string>
     <string name="prompt_extra">Country / Zip Code</string>
-    <string name="action_btn">Submit</string>
+    <string name="action_submit_btn">Submit</string>
+    <string name="action_history_btn">History</string>
+    <string name="action_back_btn">Go Back</string>
 </resources>

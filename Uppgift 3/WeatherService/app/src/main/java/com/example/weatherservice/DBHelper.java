@@ -99,32 +99,56 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<WeatherEntity> getWeatherList(ArrayList<WeatherEntity> valueEntitys) {
 
-        SQLiteDatabase db = this.getWritableDatabase(); // this class that has the SQLiteOpenHelper
+        SQLiteDatabase db = this.getWritableDatabase();
 
 
-        String selectAll = "SELECT " + KEY_LOCATION + ", " + KEY_COUNTRY+ ", " + KEY_STATUS +
+        String selectAll = "SELECT " + KEY_LOCATION + ", " + KEY_COUNTRY+ ", " + KEY_STATUS + ", " +
                 KEY_IMAGE + " FROM " + TABLE_WEATHER;
 
         Cursor cursor = db.rawQuery(selectAll, null);
 
-        if (cursor.moveToFirst()) {
-            while (cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
+            String value_location = cursor.getString(0);
+            String value_country = cursor.getString(1);
+            String value_status = cursor.getString(2);
+            String value_image = cursor.getString(3);
 
-                String value_location = cursor.getString(0);
-                String value_country = cursor.getString(1);
-                String value_status = cursor.getString(2);
-                String value_image = cursor.getString(3);
-
-                WeatherEntity localEntity = new WeatherEntity();
-                localEntity.setLocation(value_location);
-                localEntity.setCountry(value_country);
-                localEntity.setStatus(value_status);
-                localEntity.setWeatherImage(value_image);
-                valueEntitys.add(localEntity);
-            }
+            WeatherEntity localEntity = new WeatherEntity();
+            localEntity.setLocation(value_location);
+            localEntity.setCountry(value_country);
+            localEntity.setStatus(value_status);
+            localEntity.setWeatherImage(value_image);
+            valueEntitys.add(localEntity);
         }
 
+        cursor.close();
+        db.close();
 
+        Log.d("WE-tag", "getWeatherList: " + valueEntitys.size());
         return valueEntitys;
+    }
+
+    public String getLatestEntry() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectAll = "SELECT * FROM " + TABLE_WEATHER + " WHERE entry_id = (SELECT MAX(entry_id) FROM " + TABLE_WEATHER + ")";
+        cursor = db.rawQuery(selectAll, null);
+
+        String value = "";
+        if (cursor.moveToFirst()) {
+            value = cursor.getString(cursor.getColumnIndex(KEY_LOCATION))
+                    + ", " + cursor.getString(cursor.getColumnIndex(KEY_COUNTRY));
+        }
+
+        return value;
+    }
+
+    public void deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM "+ TABLE_WEATHER);
+        db.close();
+
+        //long nrOfRows = DatabaseUtils.queryNumEntries(db,TABLE_WEATHER);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.weatherservice;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -37,17 +36,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final String celsius = "°C";
 
-    private String iconUrl;
-    private String weather;
-    private String location;
+    private String iconUrl, weather, location;
 
     private EditText inputCity, inputZipCode;
-    private Button submitBtn;
+    private Button submitBtn, historyBtn;
     private ImageView weatherImage;
     private TextView locationTitle, timeTitle, status, temp, tempMin, tempMax, errorMsg;
 
     private Context context;
-    private DBHelper db;
+    private DBHelper dBhelper;
 
 
     @Override
@@ -58,15 +55,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initValues();
 
         submitBtn.setOnClickListener(this);
+        historyBtn.setOnClickListener(this);
     }
 
     private void initValues() {
         context = getApplicationContext();
-        db = new DBHelper(context);
+        dBhelper = new DBHelper(context);
 
         inputCity = (EditText) findViewById(R.id.inputCity);
         inputZipCode = (EditText) findViewById(R.id.inputZipCode);
         submitBtn = (Button) findViewById(R.id.submitBtn);
+        historyBtn = (Button) findViewById(R.id.historyBtn);
 
         errorMsg = (TextView) findViewById(R.id.errorMsg);
 
@@ -80,9 +79,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         //String getURL = "https://api.openweathermap.org/data/2.5/weather?q=malmo,se&units=metric&APPID=099eff339f56d6a29a9823857b2f2671&mode=json";
 
+        switch (view.getId()) {
+            case R.id.submitBtn:
+                onClickHandleSubmit();
+                break;
+            case R.id.historyBtn:
+                onClickHandleHistory();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void onClickHandleSubmit() {
         String input = inputCity.getText().toString();
 
         if(input.equals("")){
@@ -102,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onResponse(JSONObject response) {
                             try {
 
-                               // Log.d("volley", "onResponse: " + response);
+                                // Log.d("volley", "onResponse: " + response);
                                 String timeStamp = getTimeStamp();
                                 timeTitle.setText(timeStamp);
 
@@ -131,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 WeatherEntity details = new WeatherEntity(location, country,
                                         timeStamp, weather, temperature, temperatureMin,
                                         temperatureMax, iconUrl);
-                                db.insertWeatherDetails(details);
+                                dBhelper.insertWeatherDetails(details);
 
                                 startService();
                             } catch (JSONException e) {
@@ -157,6 +169,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    private void onClickHandleHistory() {
+        Intent intent = new Intent(this, WeatherListActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+
+        String tmp = dBhelper.getLatestEntry();
+
+        // TODO set alarmmanager for last location
+    }
+
+
     private void setWeatherValues(JSONArray weatherArray) throws JSONException {
         String icon = "";
 
@@ -171,13 +196,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             icon = weatherJSONObject.getString("icon");
             iconUrl = "https://openweathermap.org/img/w/" + icon + ".png";
 
-            //iconUrl = "https://openweathermap.org/img/wn/" + icon + "@4x.png";
-
             Picasso.get().load(iconUrl).resize(300, 300).
                     centerCrop().into(weatherImage);
 
         }
-        iconUrl = "https://openweathermap.org/img/wn/" + icon + "@4x.png";
+       // iconUrl = "https://openweathermap.org/img/wn/" + icon + "@4x.png";
     }
 
     private String getTimeStamp() {

@@ -2,21 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp">
 
     <TextView
         android:id="@+id/locationValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Location" />
+        android:textSize="18sp"
+        android:text="Location"
+        />
+
+    <TextView
+        android:id="@+id/countryValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:text="Country"/>
 
     <TextView
         android:id="@+id/weatherValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Weather" />
+        android:textSize="18sp"
+        android:text="Weather"/>
 
     <ImageView
         android:id="@+id/imageWeather"
@@ -24,4 +36,5 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_baseline_wb_sunny_24" />
+
 </LinearLayout>
