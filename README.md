@@ -16,10 +16,11 @@
     - that you can save data even when closing the app (hint: SharedPreferences)
 
 
-- **SOMTHING** : 
-    - SOMTHING
+- **WeatherService** - Create an app using https://openweathermap.org/ (You need to create an account for an API key) 
+    - With the API you will create a Service that creates different notifications based on where the value is based on what you enter in the app
     - *Bonus goal* :
-      - SOMTHING
+      - You create a function that checks the weather at a time interval (hint: AlarmManager)
+      - Set up that the weather data received can be saved to check later (Hint SQLite)
   
 
 - **Projekt** : 
