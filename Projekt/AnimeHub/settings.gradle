@@ -1,0 +1,2 @@
+rootProject.name = "Anime Hub"
+include ':app'
