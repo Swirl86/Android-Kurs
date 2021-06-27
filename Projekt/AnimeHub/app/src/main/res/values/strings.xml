@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Anime Hub</string>
-    <string name="info_title">Anime Title</string>
+    <string name="info_title">Anime Title ʕ•ᴥ•ʔ</string>
     <string name="descr_image">Anime Image</string>
     <string name="info_episodes">Episodes</string>
     <string name="info_ongoing">Ongoing</string>
@@ -9,4 +9,5 @@
     <string name="info_status">Status</string>
     <string name="info_premiered">Premiered</string>
     <string name="info_synopsis">Synopsis</string>
+    <string name="favorite_title">Favorite Anime List ʕ•ᴥ•ʔ</string>
 </resources>

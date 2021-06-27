@@ -15,15 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class OptionsMenuActivity extends AppCompatActivity {
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
     Intent intent;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,7 +28,6 @@ public class OptionsMenuActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorites:
-                makeToast("Go to Favorites!");
                 intent = new Intent(OptionsMenuActivity.this, AnimeFavoritesActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -49,6 +40,9 @@ public class OptionsMenuActivity extends AppCompatActivity {
                 return true;
             case R.id.action_search:
                 makeToast("Go to search by title!");
+                intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/

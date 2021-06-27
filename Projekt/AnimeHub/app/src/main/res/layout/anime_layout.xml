@@ -88,7 +88,6 @@
             android:layout_marginBottom="24dp"
             android:fillViewport="true"
             android:scrollbars="vertical"
-            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/layoutDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.941"
@@ -98,8 +97,7 @@
                 android:id="@+id/synopsisValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:isScrollContainer="true"
-                android:maxLines="20">
+                android:maxLines="10">
 
             </TextView>
         </ScrollView>

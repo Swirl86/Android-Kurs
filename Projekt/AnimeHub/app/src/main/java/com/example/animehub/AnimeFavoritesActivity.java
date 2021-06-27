@@ -1,13 +1,17 @@
 package com.example.animehub;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,6 +22,8 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     private DBHelper dBhelper;
     private RecyclerView recyclerView;
     private RecyclerviewAdapter recyclerviewAdapter;
+
+    private ImageButton deleteButton;
 
     private ArrayList<AnimeObject> animeObjects;
     private AnimeObject animeObject;
@@ -34,11 +40,50 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
         animeObjects = dBhelper.getAnimeList(animeObjects);
         recyclerviewAdapter = new RecyclerviewAdapter(animeObjects, this);
         recyclerView.setAdapter(recyclerviewAdapter);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dBhelper.isEmpty()) {
+                    Toast.makeText(AnimeFavoritesActivity.this,
+                            "Nothing to delete.", Toast.LENGTH_SHORT).show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AnimeFavoritesActivity.this);
+                    builder.setMessage("Do you want to delete the list?").setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dBhelper.deleteAllObjects();
+                                    Toast.makeText(AnimeFavoritesActivity.this,
+                                            "List is deleted \uD83D\uDC4D", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    intent = new Intent(context, MainActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                   /* Toast.makeText(AnimeFavoritesActivity.this,
+                                            "\uD83D\uDC96", Toast.LENGTH_SHORT).show();*/
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    builder.setTitle("Delete List");
+                    alert.show();
+                }
+            }
+        });
     }
 
     private void initValues() {
 
         animeObjects = new ArrayList<>();
+
+        deleteButton = findViewById(R.id.deleteButton);
 
         context = getApplicationContext();
         dBhelper = new DBHelper(context);

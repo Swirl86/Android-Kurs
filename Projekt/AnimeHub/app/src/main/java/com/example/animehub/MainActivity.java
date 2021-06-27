@@ -60,7 +60,11 @@ public class MainActivity extends OptionsMenuActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String input = searchBar.getText().toString();
-                    doSearch(animeSearch, input);
+                    if (input.equals("")) {
+                        doSearch(topAnimeSearch, "");
+                    } else {
+                        doSearch(animeSearch, input);
+                    }
                     return true;
                 }
                 return false;
@@ -87,6 +91,8 @@ public class MainActivity extends OptionsMenuActivity {
         String getURL = url + type + input.trim();
 
         // TODO load 5 per page, set limit or load all
+        // Todo Switch case and build url str depending on search type
+
         getURL = type.equals(animeSearch) ? getURL + "&limit=5" : getURL + "";
 
         // Set title depending on search type
@@ -99,7 +105,6 @@ public class MainActivity extends OptionsMenuActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             String valueType = type.equals(animeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
 

@@ -117,6 +117,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return objects;
     }
 
+    public boolean isEmpty() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String countAll = "SELECT COUNT(*) FROM " + TABLE_ANIME;
+
+        Cursor cursor = db.rawQuery(countAll, null);
+        cursor.moveToNext();
+
+        return cursor.getString(0).equals("0");
+    }
+
     public boolean deleteAnimeObject(String animeId) {
 
         SQLiteDatabase db = this.getWritableDatabase();

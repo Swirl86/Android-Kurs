@@ -1,14 +1,13 @@
 package com.example.animehub;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,8 +34,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
             statusTextView, premieredTextView, synopsisTextView;
 
     private ImageView imageAnime;
-    private MaterialButton favoriteBtn;
-
+    private MaterialButton favoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +45,15 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
         initValues();
         fetchAnimeData();
 
-        favoriteBtn.setOnClickListener(new View.OnClickListener() {
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("onAnimeClick", "favoriteBtn CLICKED ");
                 if (dBhelper.detailsExists(animeId)) {
-                    favoriteBtn.setIconTintResource(R.color.white);
+                    favoriteButton.setIconTintResource(R.color.white);
                     dBhelper.deleteAnimeObject(animeId);
                 } else {
-                    favoriteBtn.setIconTintResource(R.color.red);// Create table entry
+                    favoriteButton.setIconTintResource(R.color.red);// Create table entry
                     AnimeObject details = new AnimeObject(animeId, imageUrl, title,
                             episodes, synopsis, airing, score);
 
@@ -138,12 +136,14 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
         durationTextView = findViewById(R.id.detailViewDuration);
         statusTextView = findViewById(R.id.detailViewStatus);
         premieredTextView = findViewById(R.id.detailViewPremiered);
-        synopsisTextView = findViewById(R.id.detailViewDescription);
 
-        favoriteBtn = findViewById(R.id.favoriteButton);
+        synopsisTextView = findViewById(R.id.detailViewDescription);
+        synopsisTextView.setMovementMethod(new ScrollingMovementMethod());
+
+        favoriteButton = findViewById(R.id.favoriteButton);
 
         if (dBhelper.detailsExists(animeId)) {
-            favoriteBtn.setIconTintResource(R.color.red);
+            favoriteButton.setIconTintResource(R.color.red);
         }
     }
 }
