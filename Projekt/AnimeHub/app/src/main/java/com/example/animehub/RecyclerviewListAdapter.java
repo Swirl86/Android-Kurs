@@ -34,7 +34,6 @@ public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewLi
             airingValue = itemView.findViewById(R.id.airingValue);
             scoreValue = itemView.findViewById(R.id.scoreValue);
             urlValue = itemView.findViewById(R.id.urlValue);
-
             clickListener = onAnimeClickListener;
 
             itemView.setOnClickListener(this);

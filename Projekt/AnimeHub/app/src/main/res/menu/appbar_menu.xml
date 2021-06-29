@@ -16,9 +16,6 @@
         android:id="@+id/action_upcoming"
         android:title="Upcoming" />
 
-    <item
-        android:id="@+id/action_latest"
-        android:title="Latest Updated" />
 
     <item
         android:id="@+id/action_popular"

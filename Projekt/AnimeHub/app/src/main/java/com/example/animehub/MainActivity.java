@@ -1,6 +1,7 @@
 package com.example.animehub;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +40,9 @@ public class MainActivity extends OptionsMenuActivity {
     // GET commands
     private final String url = "https://api.jikan.moe/v3/";
     private final String animeSearch = "search/anime?q=";
-    private final String topAnimeSearch = "top/anime/1/upcoming";
+    private final String topUpcomingAnimeSearch = "top/anime/1/upcoming";
+    private final String ongoingAnimeSearch = "top/anime/1/airing";
+    private final String popularAnimeSearch = "search/anime?q=&order_by=score&sort=desc&page=1";
 
     /*  https://jikan.docs.apiary.io/#introduction
         Rate Limiting:
@@ -53,14 +57,16 @@ public class MainActivity extends OptionsMenuActivity {
 
     // Static so AnimeListHandler can use Context
     public static Context context = null;
-
+    private Intent intent;
     private DBHelper dBhelper;
     private RecyclerView recyclerView;
     private RecyclerviewListAdapter recyclerviewListAdapter;
-    private AnimeListHandler animeListHandler;
+
+    private String bSearchType;
 
     private EditText searchBar;
     private TextView searchType;
+    private ProgressBar progressBar;
     private FloatingActionButton scrollUp;
 
     @Override
@@ -70,7 +76,7 @@ public class MainActivity extends OptionsMenuActivity {
         // deleteFiles(getApplicationContext().getCacheDir());
         initValues();
 
-        doSearch(topAnimeSearch, "");
+        callChosenSearch();
 
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -78,8 +84,10 @@ public class MainActivity extends OptionsMenuActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validString()) {
                     String input = searchBar.getText().toString();
                     if (input.equals("")) {
-                        doSearch(topAnimeSearch, "");
+                        searchType.setText("Top Upcoming Anime");
+                        doSearch(topUpcomingAnimeSearch, "");
                     } else {
+                        searchType.setText("Search Result For " + input);
                         doSearch(animeSearch, input);
                     }
                     return true;
@@ -113,6 +121,24 @@ public class MainActivity extends OptionsMenuActivity {
         });
     }
 
+    private void callChosenSearch() {
+        System.out.println("----> " + bSearchType);
+
+        switch (bSearchType) {
+            case "action_ongoing":
+                searchType.setText("Top Ongoing Anime");
+                doSearch(ongoingAnimeSearch, "");
+                break;
+            case "action_popular":
+                searchType.setText("Top Popular Anime");
+                doSearch(popularAnimeSearch, "");
+                break;
+            default:
+                searchType.setText("Top Upcoming Anime");
+                doSearch(topUpcomingAnimeSearch, "");
+        }
+    }
+
     private void deleteFiles(File dir) {
         if (dir != null) {
             if (dir.listFiles() != null && dir.listFiles().length > 0) {
@@ -131,13 +157,7 @@ public class MainActivity extends OptionsMenuActivity {
 
         String getURL = url + type + input.trim();
 
-        // TODO load 5 per page, set limit or load all
-        // Todo Switch case and build url str depending on search type
-
         getURL = type.equals(animeSearch) ? getURL + "&limit=5" : getURL + "";
-
-        // Set title depending on search type
-        searchType.setText(type.equals(animeSearch) ? "Search Result For " + input : "Top Upcoming Anime");
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -147,11 +167,11 @@ public class MainActivity extends OptionsMenuActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             jsonRequestTimeStamp = System.currentTimeMillis();
-                            String valueType = type.equals(animeSearch) ? "results" : "top";
+                            String valueType = type.equals(animeSearch) || type.equals(popularAnimeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
 
-                            animeListHandler = new AnimeListHandler(results, recyclerView, valueType);
-
+                            new AnimeListHandler(results, recyclerView, valueType);
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -185,6 +205,7 @@ public class MainActivity extends OptionsMenuActivity {
 
     private void initValues() {
         context = this;
+        intent = getIntent();
         dBhelper = new DBHelper(context);
 
         jsonRequestTimeStamp = 0L;
@@ -199,8 +220,16 @@ public class MainActivity extends OptionsMenuActivity {
         searchType = findViewById(R.id.searchType);
         searchType.setPaintFlags(searchType.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        scrollUp = findViewById(R.id.scrollUp);
+        progressBar = findViewById(R.id.progressBarMain);
+
+        scrollUp = findViewById(R.id.scrollUpMain);
         scrollUp.setVisibility(View.GONE);
+
+        if (intent.hasExtra("search_type")) {
+            bSearchType = intent.getExtras().getString("search_type", "");
+        } else {
+            bSearchType = "";
+        }
     }
 
     @Override

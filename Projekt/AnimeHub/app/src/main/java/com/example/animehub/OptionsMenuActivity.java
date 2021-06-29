@@ -24,40 +24,37 @@ public class OptionsMenuActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_favorites:
                 intent = new Intent(OptionsMenuActivity.this, AnimeFavoritesActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             case R.id.action_home:
                 intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
+                intent.putExtra("search_type", "");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
                 return true;
             case R.id.action_ongoing:
-                makeToast("See ongoing!");
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
+                intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
+                intent.putExtra("search_type", "action_ongoing");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             case R.id.action_upcoming:
-                makeToast("See upcoming!");
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
+                intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
+                intent.putExtra("search_type", "action_upcoming");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
-                return true;
-            case R.id.action_latest:
-                makeToast("See latest updates!");
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             case R.id.action_popular:
-                makeToast("See most popular!");
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
+                intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
+                intent.putExtra("search_type", "action_popular");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

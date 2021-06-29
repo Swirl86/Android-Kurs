@@ -1,5 +1,6 @@
 package com.example.animehub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class AnimeFavoritesActivity extends OptionsMenuActivity implements RecyclerviewListAdapter.ListItemClickListener {
@@ -22,9 +25,10 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     private RecyclerviewListAdapter recyclerviewListAdapter;
 
     private ImageButton deleteButton;
+    private FloatingActionButton scrollUp;
 
     private ArrayList<AnimeObject> animeObjects;
-    private AnimeObject animeObject;
+    //private AnimeObject animeObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
                                             "List is deleted \uD83D\uDC4D", Toast.LENGTH_SHORT).show();
                                     finish();
                                     intent = new Intent(context, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                                 }
@@ -73,6 +78,29 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
                 }
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int x, int y) {
+                // y is the change in the vertical scroll position
+                if (y < 0) {
+                    //scroll up
+                    scrollUp.setVisibility(View.GONE);
+                } else if (y > 0) {
+                    //scroll down
+                    scrollUp.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        scrollUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.smoothScrollToPosition(0);
+                scrollUp.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initValues() {
@@ -80,6 +108,9 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
         animeObjects = new ArrayList<>();
 
         deleteButton = findViewById(R.id.deleteButton);
+
+        scrollUp = findViewById(R.id.scrollUpFavorites);
+        scrollUp.setVisibility(View.GONE);
 
         context = getApplicationContext();
         dBhelper = new DBHelper(context);
@@ -90,7 +121,7 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
 
     @Override
     public void onAnimeClick(int position) {
-        Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
@@ -99,6 +130,7 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
         Intent intent = new Intent(context, AnimeDetailsActivity.class);
         //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }

@@ -2,7 +2,6 @@ package com.example.animehub;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,8 +79,7 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewListAd
 
     @Override
     public void onAnimeClick(int position) {
-
-        Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
@@ -90,6 +88,7 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewListAd
         Intent intent = new Intent(MainActivity.context, AnimeDetailsActivity.class);
         //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.context.startActivity(intent);
     }
 

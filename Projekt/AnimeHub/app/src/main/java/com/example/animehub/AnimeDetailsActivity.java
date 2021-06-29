@@ -166,6 +166,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                     intent = new Intent(context, AnimeGenresActivity.class);
                     // intent.putExtra("genre", genre);
                     intent.putExtra("genreInfo", bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             });

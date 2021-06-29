@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
 
     private FloatingActionButton scrollUp;
     private TextView title;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
                         try {
                             JSONArray result = response.getJSONArray("results");
                             setResultData(result);
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -141,11 +144,13 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
         scrollUp = findViewById(R.id.scrollUpGenera);
         scrollUp.setVisibility(View.GONE);
         title = findViewById(R.id.generaTitle);
+
+        progressBar = findViewById(R.id.progressBarGenre);
     }
 
     @Override
     public void onAnimeClick(int position) {
-        Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
@@ -154,6 +159,7 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
         Intent intent = new Intent(context, AnimeDetailsActivity.class);
         //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
