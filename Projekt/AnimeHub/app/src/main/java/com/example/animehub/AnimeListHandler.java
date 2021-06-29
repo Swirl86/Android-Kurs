@@ -1,9 +1,7 @@
 package com.example.animehub;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +12,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class AnimeListHandler extends MainActivity implements RecyclerviewAdapter.ListItemClickListener {
+public class AnimeListHandler extends MainActivity implements RecyclerviewListAdapter.ListItemClickListener {
 
-    private RecyclerviewAdapter recyclerviewAdapter;
+    private RecyclerviewListAdapter recyclerviewListAdapter;
     private JSONArray jsonArray;
 
     private ArrayList<AnimeObject> animeObjects;
@@ -35,10 +33,8 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewAdapte
             setSearchResultData();
         }
 
-        // recyclerView = recyclerView.findViewById(R.id.animeRecycler);
-        // recyclerView.setLayoutManager( new LinearLayoutManager(this));
-        recyclerviewAdapter = new RecyclerviewAdapter(animeObjects, this);
-        recyclerView.setAdapter(recyclerviewAdapter);
+        recyclerviewListAdapter = new RecyclerviewListAdapter(animeObjects, this);
+        recyclerView.setAdapter(recyclerviewListAdapter);
     }
 
     private void setSearchResultData() throws JSONException {
@@ -53,7 +49,8 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewAdapte
             animeObject = new AnimeObject(obj.getString("mal_id"),
                     obj.getString("image_url"), obj.getString("title"),
                     obj.getString("episodes"), obj.getString("synopsis"),
-                    airing, obj.getString("score"));
+                    airing, obj.getString("score") + " \u2b50",
+                    obj.getString("url"));
 
             animeObjects.add(animeObject);
         }
@@ -70,7 +67,8 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewAdapte
                     obj.getString("image_url"), obj.getString("title"),
                     getNotNullValue(obj.getString("episodes")),
                     "Start Date: " + getNotNullValue(obj.getString("start_date")),
-                    "", "Rank: " + obj.getString("rank"));
+                    "", "Rank: " + obj.getString("rank"),
+                    obj.getString("url"));
 
             animeObjects.add(animeObject);
         }

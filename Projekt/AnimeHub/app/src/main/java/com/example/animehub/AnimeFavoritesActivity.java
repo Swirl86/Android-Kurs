@@ -1,7 +1,6 @@
 package com.example.animehub;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,19 +8,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class AnimeFavoritesActivity extends OptionsMenuActivity implements RecyclerviewAdapter.ListItemClickListener {
+public class AnimeFavoritesActivity extends OptionsMenuActivity implements RecyclerviewListAdapter.ListItemClickListener {
 
     public static Context context = null;
     private DBHelper dBhelper;
     private RecyclerView recyclerView;
-    private RecyclerviewAdapter recyclerviewAdapter;
+    private RecyclerviewListAdapter recyclerviewListAdapter;
 
     private ImageButton deleteButton;
 
@@ -32,14 +30,12 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_favorites);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initValues();
-        Log.d("onFavClick", "onFavClick: ");
 
         animeObjects = dBhelper.getAnimeList(animeObjects);
-        recyclerviewAdapter = new RecyclerviewAdapter(animeObjects, this);
-        recyclerView.setAdapter(recyclerviewAdapter);
+        recyclerviewListAdapter = new RecyclerviewListAdapter(animeObjects, this);
+        recyclerView.setAdapter(recyclerviewListAdapter);
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

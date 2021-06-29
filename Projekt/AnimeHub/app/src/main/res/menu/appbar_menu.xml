@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_search"
-        android:title="Search" />
-
+        android:id="@+id/action_home"
+        android:title="Search"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always"  />
 
     <item
         android:id="@+id/action_ongoing"
@@ -27,11 +28,5 @@
         android:id="@+id/action_favorites"
         android:title="Favorites"
         android:icon="@drawable/ic_heart_favorite"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_account"
-        android:title="Account"
-        android:icon="@drawable/ic_baseline_login_24"
         app:showAsAction="always" />
 </menu>

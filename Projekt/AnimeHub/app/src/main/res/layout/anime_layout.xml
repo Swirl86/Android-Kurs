@@ -16,11 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="130dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:contentDescription="@string/descr_image"
-            app:layout_constraintEnd_toStartOf="@+id/scrollView"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/episodesTitle"
             app:layout_constraintStart_toStartOf="@+id/titleValue"
             app:layout_constraintTop_toBottomOf="@+id/titleValue"
@@ -32,72 +28,59 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginTop="8dp"
             android:text="@string/info_episodes"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView"
             app:layout_constraintStart_toEndOf="@+id/episodesTitle"
-            app:layout_constraintTop_toBottomOf="@+id/titleValue"
-            app:layout_constraintVertical_bias="0.23" />
+            app:layout_constraintTop_toTopOf="@+id/episodesTitle" />
 
         <TextView
             android:id="@+id/episodesTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:text="@string/info_episodes"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView"
-            app:layout_constraintStart_toEndOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/scrollView"
-            app:layout_constraintTop_toBottomOf="@+id/titleValue"
-            app:layout_constraintVertical_bias="0.23" />
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/imageValue" />
 
         <TextView
             android:id="@+id/airingValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="@string/info_ongoing"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView"
-            app:layout_constraintTop_toBottomOf="@+id/titleValue"
-            app:layout_constraintVertical_bias="0.23" />
+            app:layout_constraintStart_toStartOf="@+id/episodesValue"
+            app:layout_constraintTop_toTopOf="@+id/scoreValue" />
 
         <TextView
             android:id="@+id/scoreValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/info_score"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView"
-            app:layout_constraintEnd_toStartOf="@+id/airingValue"
-            app:layout_constraintHorizontal_bias="0.513"
-            app:layout_constraintStart_toEndOf="@+id/episodesValue"
-            app:layout_constraintTop_toBottomOf="@+id/titleValue"
-            app:layout_constraintVertical_bias="0.23" />
+            app:layout_constraintStart_toStartOf="@+id/episodesTitle"
+            app:layout_constraintTop_toBottomOf="@+id/episodesTitle" />
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="236dp"
-            android:layout_height="93dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="24dp"
             android:fillViewport="true"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@+id/layoutDivider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.941"
-            app:layout_constraintStart_toStartOf="@+id/episodesTitle">
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageValue">
 
             <TextView
                 android:id="@+id/synopsisValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="10">
+                android:maxLines="5">
 
             </TextView>
         </ScrollView>
@@ -132,12 +115,24 @@
             android:id="@+id/layoutDivider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageValue" />
+            app:layout_constraintTop_toBottomOf="@+id/scrollView" />
+
+        <TextView
+            android:id="@+id/urlValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:autoLink="web"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/scoreValue"
+            app:layout_constraintTop_toBottomOf="@+id/scoreValue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

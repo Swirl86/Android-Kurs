@@ -2,7 +2,7 @@ package com.example.animehub;
 
 public class AnimeObject {
 
-    String animeId, imageUrl, title, episodes, synopsis, airing, score;
+    String animeId, imageUrl, title, episodes, synopsis, airing, score, url;
 
     public AnimeObject() {
         this.animeId = "Unknown";
@@ -12,9 +12,10 @@ public class AnimeObject {
         this.synopsis = "Unknown";
         this.airing = "Unknown";
         this.score = "Unknown";
+        this.url = "Unknown";
     }
 
-    public AnimeObject(String animeId, String imageUrl, String title, String episodes, String synopsis, String airing, String score) {
+    public AnimeObject(String animeId, String imageUrl, String title, String episodes, String synopsis, String airing, String score, String url) {
         this.animeId = animeId;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -22,6 +23,7 @@ public class AnimeObject {
         this.synopsis = synopsis;
         this.airing = airing;
         this.score = score;
+        this.url = url;
     }
 
     public String getAnimeId() {
@@ -78,5 +80,13 @@ public class AnimeObject {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

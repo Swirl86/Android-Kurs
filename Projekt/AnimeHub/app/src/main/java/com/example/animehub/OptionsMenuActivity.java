@@ -1,16 +1,11 @@
 package com.example.animehub;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class OptionsMenuActivity extends AppCompatActivity {
@@ -32,14 +27,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
-            case R.id.action_account:
-                makeToast("Login/Logout");
-               /* intent = new Intent(OptionsMenuActivity.this, FormActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);*/
-                return true;
-            case R.id.action_search:
-                makeToast("Go to search by title!");
+            case R.id.action_home:
                 intent = new Intent(OptionsMenuActivity.this, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);

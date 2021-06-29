@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapter.ViewHolder> {
+public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewListAdapter.ViewHolder> {
 
     private ArrayList<AnimeObject> localAnimeObjects;
     private ListItemClickListener localClickListener;
@@ -20,7 +20,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     // Every List item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView titleValue, episodesValue, synopsisValue, airingValue, scoreValue;
+        private TextView titleValue, episodesValue, synopsisValue, airingValue, scoreValue, urlValue;
         private ImageView imageAnime;
 
         private ListItemClickListener clickListener;
@@ -33,6 +33,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             synopsisValue = itemView.findViewById(R.id.synopsisValue);
             airingValue = itemView.findViewById(R.id.airingValue);
             scoreValue = itemView.findViewById(R.id.scoreValue);
+            urlValue = itemView.findViewById(R.id.urlValue);
 
             clickListener = onAnimeClickListener;
 
@@ -68,18 +69,22 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         public ImageView getImageAnime() {
             return imageAnime;
         }
+
+        public TextView getUrlValue() {
+            return urlValue;
+        }
     }
 
     public interface ListItemClickListener {
         void onAnimeClick(int position);
     }
 
-    public RecyclerviewAdapter() {
+    public RecyclerviewListAdapter() {
         localAnimeObjects = new ArrayList<>();
 
     }
 
-    public RecyclerviewAdapter(ArrayList<AnimeObject> objects, ListItemClickListener listItemClickListener) {
+    public RecyclerviewListAdapter(ArrayList<AnimeObject> objects, ListItemClickListener listItemClickListener) {
         localAnimeObjects = objects;
         localClickListener = listItemClickListener;
     }
@@ -98,12 +103,13 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     }
 
     @Override
-    public void onBindViewHolder(RecyclerviewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerviewListAdapter.ViewHolder holder, int position) {
         holder.getTitleValue().setText(localAnimeObjects.get(position).getTitle());
         holder.getEpisodesValue().setText(localAnimeObjects.get(position).getEpisodes());
         holder.getSynopsisValue().setText(localAnimeObjects.get(position).getSynopsis());
         holder.getAiringValue().setText(localAnimeObjects.get(position).getAiring());
         holder.getScoreValue().setText(localAnimeObjects.get(position).getScore());
+        holder.getUrlValue().setText(localAnimeObjects.get(position).getUrl());
 
         ImageView animeImage = holder.getImageAnime();
         Picasso.get().load(localAnimeObjects.get(position).getImageUrl()).into(animeImage);

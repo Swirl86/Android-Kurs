@@ -25,11 +25,12 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_SYNOPSIS = "start_date";
     private static final String KEY_AIRING = "airing";
     private static final String KEY_SCORE = "score";
+    private static final String KEY_URL = "url";
     // Table Create Statements
     private static final String CREATE_TABLE_ANIME = "CREATE TABLE " + TABLE_ANIME + "(" +
             KEY_ANIME_ID + " TEXT NOT NULL PRIMARY KEY UNIQUE," +
             KEY_IMAGE_URL + " TEXT," + KEY_TITLE + " TEXT," + KEY_EPISODES + " TEXT," +
-            KEY_SYNOPSIS + " TEXT," + KEY_AIRING + " TEXT," + KEY_SCORE + " TEXT)";
+            KEY_SYNOPSIS + " TEXT," + KEY_AIRING + " TEXT," + KEY_SCORE + " TEXT," + KEY_URL + " TEXT)";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public Boolean insertWeatherDetails(AnimeObject object) {
+    public Boolean insertAnimeDetails(AnimeObject object) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -60,7 +61,11 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_EPISODES, object.getEpisodes());
         contentValues.put(KEY_SYNOPSIS, object.getSynopsis());
         contentValues.put(KEY_AIRING, object.getAiring());
-        contentValues.put(KEY_SCORE, object.getScore());
+
+        String score = isNumeric(object.getScore()) ? object.getScore() + "\u2b50" : object.getScore();
+        contentValues.put(KEY_SCORE, score);
+
+        contentValues.put(KEY_URL, object.getUrl());
 
         long result = -1;
 
@@ -68,6 +73,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // -1 something went wrong
         return result == -1 ? false : true;
+    }
+
+    public boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public Boolean detailsExists(String location) {
@@ -96,6 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String value_synopsis = cursor.getString(4);
             String value_airing = cursor.getString(5);
             String value_score = cursor.getString(6);
+            String value_url = cursor.getString(7);
 
 
             AnimeObject object = new AnimeObject();
@@ -107,6 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
             object.setSynopsis(value_synopsis);
             object.setAiring(value_airing);
             object.setScore(value_score);
+            object.setUrl(value_url);
 
             objects.add(object);
         }

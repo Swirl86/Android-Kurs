@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,19 +35,33 @@ public class MainActivity extends OptionsMenuActivity {
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private static Bundle mBundleRecyclerViewState;
 
+    // GET commands
     private final String url = "https://api.jikan.moe/v3/";
     private final String animeSearch = "search/anime?q=";
     private final String topAnimeSearch = "top/anime/1/upcoming";
 
+    /*  https://jikan.docs.apiary.io/#introduction
+        Rate Limiting:
+        Daily Limit: Unlimited
+        30 requests / minute
+        2 requests / second
+
+        Add a delay of 4 (FOUR) SECONDS between each request
+     */
+    public long jsonRequestTimeStamp;
+    public long newRequestTimeStamp;
+
+    // Static so AnimeListHandler can use Context
     public static Context context = null;
 
     private DBHelper dBhelper;
     private RecyclerView recyclerView;
-    private RecyclerviewAdapter recyclerviewAdapter;
+    private RecyclerviewListAdapter recyclerviewListAdapter;
     private AnimeListHandler animeListHandler;
 
     private EditText searchBar;
     private TextView searchType;
+    private FloatingActionButton scrollUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +75,7 @@ public class MainActivity extends OptionsMenuActivity {
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validString()) {
                     String input = searchBar.getText().toString();
                     if (input.equals("")) {
                         doSearch(topAnimeSearch, "");
@@ -68,6 +85,30 @@ public class MainActivity extends OptionsMenuActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int x, int y) {
+                // y is the change in the vertical scroll position
+                if (y < 0) {
+                    //scroll up
+                    scrollUp.setVisibility(View.GONE);
+                } else if (y > 0) {
+                    //scroll down
+                    scrollUp.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        scrollUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Position 0 scroll to the beginning of recyclerView
+                recyclerView.smoothScrollToPosition(0);
+                scrollUp.setVisibility(View.GONE);
             }
         });
     }
@@ -105,6 +146,7 @@ public class MainActivity extends OptionsMenuActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            jsonRequestTimeStamp = System.currentTimeMillis();
                             String valueType = type.equals(animeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
 
@@ -125,18 +167,40 @@ public class MainActivity extends OptionsMenuActivity {
         queue.add(jsonRequest);
     }
 
+
+    private boolean validTimeRange() {
+        newRequestTimeStamp = System.currentTimeMillis();
+        return newRequestTimeStamp - jsonRequestTimeStamp >= 4000;
+    }
+
+
+    private boolean validString() {
+        if (searchBar.getText().toString().length() >= 3) {
+            return true;
+        }
+        Toast.makeText(context, "Search need to be at least 3 letters", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+
     private void initValues() {
         context = this;
         dBhelper = new DBHelper(context);
 
+        jsonRequestTimeStamp = 0L;
+        newRequestTimeStamp = 4000L;
+
         recyclerView = findViewById(R.id.mainSearchRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerviewAdapter = new RecyclerviewAdapter();
-        recyclerView.setAdapter(recyclerviewAdapter);
+        recyclerviewListAdapter = new RecyclerviewListAdapter();
+        recyclerView.setAdapter(recyclerviewListAdapter);
 
         searchBar = findViewById(R.id.searchBar);
         searchType = findViewById(R.id.searchType);
         searchType.setPaintFlags(searchType.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        scrollUp = findViewById(R.id.scrollUp);
+        scrollUp.setVisibility(View.GONE);
     }
 
     @Override
@@ -169,7 +233,7 @@ public class MainActivity extends OptionsMenuActivity {
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         searchBar.setText(savedInstanceState.getString("searchInput"));
 
-        doSearch(animeSearch, searchBar.getText().toString());
+        doSearch(animeSearch, searchBar.getText().toString()); // TODO handle 4 SECONDS DELAY
 
         super.onSaveInstanceState(savedInstanceState);
     }
