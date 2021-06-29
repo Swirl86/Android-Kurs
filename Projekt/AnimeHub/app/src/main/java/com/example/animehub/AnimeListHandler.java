@@ -79,14 +79,11 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewListAd
 
     @Override
     public void onAnimeClick(int position) {
-        //  Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
         bundle.putString("data_type", dataType);
 
         Intent intent = new Intent(MainActivity.context, AnimeDetailsActivity.class);
-        //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.context.startActivity(intent);

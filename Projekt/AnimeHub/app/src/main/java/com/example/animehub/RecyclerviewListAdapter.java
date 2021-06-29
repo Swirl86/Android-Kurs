@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewLi
     // Every List item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView titleValue, episodesValue, synopsisValue, airingValue, scoreValue, urlValue;
+        private TextView titleValue, episodesValue, synopsisValue, airingValue, scoreValue;
+        private MaterialButton urlValue;
         private ImageView imageAnime;
 
         private ListItemClickListener clickListener;
@@ -69,7 +71,7 @@ public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewLi
             return imageAnime;
         }
 
-        public TextView getUrlValue() {
+        public MaterialButton getUrlValue() {
             return urlValue;
         }
     }

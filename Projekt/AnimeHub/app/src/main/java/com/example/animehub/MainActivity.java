@@ -170,6 +170,7 @@ public class MainActivity extends OptionsMenuActivity {
                             String valueType = type.equals(animeSearch) || type.equals(popularAnimeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
 
+
                             new AnimeListHandler(results, recyclerView, valueType);
                             progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {

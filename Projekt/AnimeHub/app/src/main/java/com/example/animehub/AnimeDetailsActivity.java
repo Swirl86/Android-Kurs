@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,7 +46,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
             statusTextView, premieredTextView, synopsisTextView;
 
     private ImageView imageAnime;
-    private MaterialButton favoriteButton;
+    private MaterialButton favoriteButton, urlButton;
     private ChipGroup genresLayout;
 
     @Override
@@ -72,6 +72,15 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                 }
             }
         });
+
+        urlButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchAnimeData() {
@@ -84,8 +93,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.d("onAnimeClick", "onResponse: " + response);
-
                             episodes = response.getString("episodes");
 
                             if (dataType.equals("top")) {
@@ -115,7 +122,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                             statusTextView.setText(getNotNullValue(response.getString("status")));
                             premieredTextView.setText(getNotNullValue(response.getString("premiered")));
                             synopsisTextView.setText(synopsis);
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -155,9 +161,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                 public void onClick(View view) {
                     int genre = ((Chip) view).getId();
                     String type = ((Chip) view).getText().toString();
-
-                    // int value = generaOptions.getValue(genre);
-                    // Toast.makeText(context, "CLICKED " + genre + "  " + ((Chip) view).getId(), Toast.LENGTH_SHORT).show();
 
                     Bundle bundle = new Bundle();
                     bundle.putString("genre_id", String.valueOf(genre));
@@ -202,22 +205,21 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
         Bundle bundle = getIntent().getBundleExtra("animeInfo");
         animeId = bundle.getString("anime_id", "1");
         dataType = bundle.getString("data_type", "Action");
-        // Log.d("onAnimeClick", "bundle: " + animeId + "  " + dataType);
-        // animeId = getIntent().getExtras().getString("anime_id", "defaultKey");
 
-        imageAnime = findViewById(R.id.detailViewImage);
-        titleTextView = findViewById(R.id.detailViewTitle);
-        episodesTextView = findViewById(R.id.detailViewEpisodes);
-        durationTextView = findViewById(R.id.detailViewDuration);
-        statusTextView = findViewById(R.id.detailViewStatus);
-        premieredTextView = findViewById(R.id.detailViewPremiered);
+        imageAnime = (ImageView) findViewById(R.id.detailViewImage);
+        titleTextView = (TextView) findViewById(R.id.detailViewTitle);
+        episodesTextView = (TextView) findViewById(R.id.detailViewEpisodes);
+        durationTextView = (TextView) findViewById(R.id.detailViewDuration);
+        statusTextView = (TextView) findViewById(R.id.detailViewStatus);
+        premieredTextView = (TextView) findViewById(R.id.detailViewPremiered);
 
-        synopsisTextView = findViewById(R.id.detailViewDescription);
+        synopsisTextView = (TextView) findViewById(R.id.detailViewDescription);
         synopsisTextView.setMovementMethod(new ScrollingMovementMethod());
 
         genresLayout = (ChipGroup) findViewById(R.id.chipGroup);
 
-        favoriteButton = findViewById(R.id.favoriteButton);
+        favoriteButton = (MaterialButton) findViewById(R.id.favoriteButton);
+        urlButton = (MaterialButton) findViewById(R.id.urlButton);
 
         if (dBhelper.detailsExists(animeId)) {
             favoriteButton.setIconTintResource(R.color.red);
