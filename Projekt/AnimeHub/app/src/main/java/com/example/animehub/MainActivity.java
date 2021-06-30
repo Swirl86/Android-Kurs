@@ -2,6 +2,7 @@ package com.example.animehub;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,16 +32,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-
 public class MainActivity extends OptionsMenuActivity {
 
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle mBundleRecyclerViewState;
+    // Maintain the state of recyclerview
+    private String KEY_RECYCLE_STATE = "recycle_state";
+    private Bundle bundleRecyclerViewState;
+    private Parcelable recyclerListState = null;
 
     // GET commands
     private final String url = "https://api.jikan.moe/v3/";
-    private final String animeSearch = "search/anime?q=";
+    private final String animeTitleSearch = "search/anime?q=";
     private final String topUpcomingAnimeSearch = "top/anime/1/upcoming";
     private final String ongoingAnimeSearch = "top/anime/1/airing";
     private final String popularAnimeSearch = "search/anime?q=&order_by=score&sort=desc&page=1";
@@ -54,28 +56,27 @@ public class MainActivity extends OptionsMenuActivity {
      */
     public long jsonRequestTimeStamp;
     public long newRequestTimeStamp;
+    private Boolean firstSearch;
 
     // Static so AnimeListHandler can use Context
     public static Context context = null;
     private Intent intent;
-    private DBHelper dBhelper;
     private RecyclerView recyclerView;
     private RecyclerviewListAdapter recyclerviewListAdapter;
 
-    private String bSearchType;
+    private String bundleSearchType;
 
     private EditText searchBar;
     private TextView searchType;
     private ProgressBar progressBar;
     private FloatingActionButton scrollUp;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // deleteFiles(getApplicationContext().getCacheDir());
         initValues();
-
         callChosenSearch();
 
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -83,15 +84,13 @@ public class MainActivity extends OptionsMenuActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validString()) {
                     String input = searchBar.getText().toString();
-                    if (input.equals("")) {
-                        searchType.setText("Top Upcoming Anime");
-                        doSearch(topUpcomingAnimeSearch, "");
-                    } else {
-                        searchType.setText("Search Result For " + input);
-                        doSearch(animeSearch, input);
-                    }
+                    searchType.setText("Search Result For " + input);
+                    doSearch(animeTitleSearch, input);
+                    dismissKeyboard();
+                    recyclerView.requestFocus();
                     return true;
                 }
+                dismissKeyboard();
                 return false;
             }
         });
@@ -109,6 +108,11 @@ public class MainActivity extends OptionsMenuActivity {
                     scrollUp.setVisibility(View.VISIBLE);
                 }
             }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
         });
 
         scrollUp.setOnClickListener(new View.OnClickListener() {
@@ -119,37 +123,23 @@ public class MainActivity extends OptionsMenuActivity {
                 scrollUp.setVisibility(View.GONE);
             }
         });
+
     }
 
     private void callChosenSearch() {
-        System.out.println("----> " + bSearchType);
-
-        switch (bSearchType) {
+        searchBar.setText("");
+        switch (bundleSearchType) {
             case "action_ongoing":
-                searchType.setText("Top Ongoing Anime");
+                searchType.setText("Current Ongoing Anime");
                 doSearch(ongoingAnimeSearch, "");
                 break;
             case "action_popular":
-                searchType.setText("Top Popular Anime");
+                searchType.setText("Highest Ranked Anime");
                 doSearch(popularAnimeSearch, "");
                 break;
             default:
-                searchType.setText("Top Upcoming Anime");
+                searchType.setText("Upcoming Anime");
                 doSearch(topUpcomingAnimeSearch, "");
-        }
-    }
-
-    private void deleteFiles(File dir) {
-        if (dir != null) {
-            if (dir.listFiles() != null && dir.listFiles().length > 0) {
-                // RECURSIVELY DELETE FILES IN DIRECTORY
-                for (File file : dir.listFiles()) {
-                    deleteFiles(file);
-                }
-            } else {
-                // JUST DELETE FILE
-                dir.delete();
-            }
         }
     }
 
@@ -157,7 +147,7 @@ public class MainActivity extends OptionsMenuActivity {
 
         String getURL = url + type + input.trim();
 
-        getURL = type.equals(animeSearch) ? getURL + "&limit=5" : getURL + "";
+        getURL = type.equals(animeTitleSearch) ? getURL + "&limit=20" : getURL + "";
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -167,12 +157,13 @@ public class MainActivity extends OptionsMenuActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             jsonRequestTimeStamp = System.currentTimeMillis();
-                            String valueType = type.equals(animeSearch) || type.equals(popularAnimeSearch) ? "results" : "top";
+
+                            String valueType = type.equals(animeTitleSearch) ||
+                                    type.equals(popularAnimeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
-
-
                             new AnimeListHandler(results, recyclerView, valueType);
                             progressBar.setVisibility(View.GONE);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -188,35 +179,43 @@ public class MainActivity extends OptionsMenuActivity {
         queue.add(jsonRequest);
     }
 
-
     private boolean validTimeRange() {
         newRequestTimeStamp = System.currentTimeMillis();
-        return newRequestTimeStamp - jsonRequestTimeStamp >= 4000;
+        if (newRequestTimeStamp - jsonRequestTimeStamp >= 4000) {
+            return true;
+        } else if (firstSearch) {
+            return true;
+        }
+        Toast.makeText(context, "\u23f1\ufe0f Whoops, try again \u23f1\ufe0f", Toast.LENGTH_SHORT).show();
+        return false;
     }
-
 
     private boolean validString() {
         if (searchBar.getText().toString().length() >= 3) {
             return true;
         }
-        Toast.makeText(context, "Search need to be at least 3 letters", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Search need to be at least 3 letters \ud83d\udc7b", Toast.LENGTH_SHORT).show();
         return false;
     }
 
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+    }
 
     private void initValues() {
         context = this;
         intent = getIntent();
-        dBhelper = new DBHelper(context);
 
         jsonRequestTimeStamp = 0L;
-        newRequestTimeStamp = 4000L;
+        newRequestTimeStamp = 0L;
+        firstSearch = true;
 
         recyclerView = findViewById(R.id.mainSearchRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerviewListAdapter = new RecyclerviewListAdapter();
+        //  recyclerviewListAdapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         recyclerView.setAdapter(recyclerviewListAdapter);
-
         searchBar = findViewById(R.id.searchBar);
         searchType = findViewById(R.id.searchType);
         searchType.setPaintFlags(searchType.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -227,44 +226,44 @@ public class MainActivity extends OptionsMenuActivity {
         scrollUp.setVisibility(View.GONE);
 
         if (intent.hasExtra("search_type")) {
-            bSearchType = intent.getExtras().getString("search_type", "");
+            bundleSearchType = intent.getExtras().getString("search_type", "");
         } else {
-            bSearchType = "";
+            bundleSearchType = "";
         }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         // save RecyclerView state
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+        bundleRecyclerViewState = new Bundle();
+        recyclerListState = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerViewState.putParcelable(KEY_RECYCLE_STATE, recyclerListState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         // restore RecyclerView state
-        if (mBundleRecyclerViewState != null) {
-            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        if (bundleRecyclerViewState != null) {
+            recyclerListState = bundleRecyclerViewState.getParcelable(KEY_RECYCLE_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(recyclerListState);
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        savedInstanceState.putString("searchInput", searchBar.getText().toString());
-
+        //   Log.d("STATE CHECK", "onSaveInstanceState " + savedInstanceState);
         super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("searchInput", searchBar.getText().toString());
     }
 
     @Override
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        //Log.d("STATE CHECK", "onRestoreInstanceState " + savedInstanceState);
         searchBar.setText(savedInstanceState.getString("searchInput"));
-
-        doSearch(animeSearch, searchBar.getText().toString()); // TODO handle 4 SECONDS DELAY
-
         super.onSaveInstanceState(savedInstanceState);
     }
+
 }

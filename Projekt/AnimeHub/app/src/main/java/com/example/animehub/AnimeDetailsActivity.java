@@ -12,6 +12,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -48,6 +49,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
     private ImageView imageAnime;
     private MaterialButton favoriteButton, urlButton;
     private ChipGroup genresLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,8 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                             premieredTextView.setText(getNotNullValue(response.getString("premiered")));
                             synopsisTextView.setText(synopsis);
 
+
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -220,6 +224,8 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
 
         favoriteButton = (MaterialButton) findViewById(R.id.favoriteButton);
         urlButton = (MaterialButton) findViewById(R.id.urlButton);
+
+        progressBar = findViewById(R.id.progressBarDetails);
 
         if (dBhelper.detailsExists(animeId)) {
             favoriteButton.setIconTintResource(R.color.red);
