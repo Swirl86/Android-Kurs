@@ -2,7 +2,6 @@ package com.example.animehub;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -36,8 +35,9 @@ public class MainActivity extends OptionsMenuActivity {
 
     // Maintain the state of recyclerview
     private String KEY_RECYCLE_STATE = "recycle_state";
+
     private Bundle bundleRecyclerViewState;
-    private Parcelable recyclerListState = null;
+    private Parcelable recyclerListState;
 
     // GET commands
     private final String url = "https://api.jikan.moe/v3/";
@@ -82,7 +82,7 @@ public class MainActivity extends OptionsMenuActivity {
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validString()) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validInput()) {
                     String input = searchBar.getText().toString();
                     searchType.setText("Search Result For " + input);
                     doSearch(animeTitleSearch, input);
@@ -190,11 +190,11 @@ public class MainActivity extends OptionsMenuActivity {
         return false;
     }
 
-    private boolean validString() {
+    private boolean validInput() {
         if (searchBar.getText().toString().length() >= 3) {
             return true;
         }
-        Toast.makeText(context, "Search need to be at least 3 letters \ud83d\udc7b", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Need at least 3 letters \ud83d\udc7b", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -214,7 +214,6 @@ public class MainActivity extends OptionsMenuActivity {
         recyclerView = findViewById(R.id.mainSearchRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerviewListAdapter = new RecyclerviewListAdapter();
-        //  recyclerviewListAdapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         recyclerView.setAdapter(recyclerviewListAdapter);
         searchBar = findViewById(R.id.searchBar);
         searchType = findViewById(R.id.searchType);

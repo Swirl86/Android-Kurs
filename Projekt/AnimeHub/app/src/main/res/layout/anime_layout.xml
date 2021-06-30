@@ -61,7 +61,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="1dp"
                 android:text="@string/info_episodes"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/guidelineMiddle"
                 app:layout_constraintTop_toTopOf="@+id/imageValue" />
 
             <TextView
@@ -92,7 +92,7 @@
                 android:layout_marginRight="16dp"
                 android:fillViewport="true"
                 android:scrollbars="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/layoutDivider"
+                app:layout_constraintBottom_toTopOf="@+id/layoutDividerBottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +108,7 @@
             </ScrollView>
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
+                android:id="@+id/guidelineMiddle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -134,7 +134,7 @@
                 app:layout_constraintVertical_bias="1.0" />
 
             <View
-                android:id="@+id/layoutDivider"
+                android:id="@+id/layoutDividerBottom"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
@@ -162,6 +162,24 @@
                 app:iconSize="34dp"
                 app:layout_constraintStart_toStartOf="@+id/scoreValue"
                 app:layout_constraintTop_toBottomOf="@+id/scoreValue" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/infoValue"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:backgroundTint="@color/teal_200"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textSize="0sp"
+                app:icon="@drawable/ic_info_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="34dp"
+                app:layout_constraintStart_toStartOf="@+id/airingValue"
+                app:layout_constraintTop_toTopOf="@+id/urlValue" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

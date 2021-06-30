@@ -43,7 +43,7 @@ public class AnimeListHandler extends MainActivity implements RecyclerviewListAd
             obj = jsonArray.getJSONObject(i);
 
             String airing = obj.getString("airing");
-            airing = airing == "true" ? "Ongoing" : "Not Ongoing";
+            airing = airing.equals("true") ? "Ongoing" : "Not Ongoing";
 
             animeObject = new AnimeObject(obj.getString("mal_id"),
                     obj.getString("image_url"), obj.getString("title"),

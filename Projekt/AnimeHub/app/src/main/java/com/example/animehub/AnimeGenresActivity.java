@@ -120,7 +120,7 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
             obj = jsonArray.getJSONObject(i);
 
             String airing = obj.getString("airing");
-            airing = airing == "true" ? "Ongoing" : "Not Ongoing";
+            airing = airing.equals("true") ? "Ongoing" : "Not Ongoing";
 
             animeObject = new AnimeObject(obj.getString("mal_id"),
                     obj.getString("image_url"), obj.getString("title"),
@@ -150,14 +150,11 @@ public class AnimeGenresActivity extends OptionsMenuActivity implements Recycler
 
     @Override
     public void onAnimeClick(int position) {
-        //Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
-        bundle.putString("data_type", "results"); // TODO if more types are added update here
+        bundle.putString("data_type", "results");
 
         Intent intent = new Intent(context, AnimeDetailsActivity.class);
-        //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

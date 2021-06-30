@@ -38,7 +38,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
     private Context context;
     private Intent intent;
     private DBHelper dBhelper;
-    private GeneraOptions generaOptions;
 
     private String animeId, imageUrl, airing, score, title, episodes, synopsis, url;
     private String dataType;
@@ -107,7 +106,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                                 episodes = getNotNullValue(episodes);
                             }
 
-
                             setGenres(response.getJSONArray("genres"));
 
                             imageUrl = response.getString("image_url");
@@ -124,7 +122,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                             statusTextView.setText(getNotNullValue(response.getString("status")));
                             premieredTextView.setText(getNotNullValue(response.getString("premiered")));
                             synopsisTextView.setText(synopsis);
-
 
                             progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
@@ -151,8 +148,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
 
         for (int i = 0; i < genres.length(); i++) {
             genreJSONObject = genres.getJSONObject(i);
-            //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            // genre.setLayoutParams(params);
 
             id = genreJSONObject.getInt("mal_id");
             type = genreJSONObject.getString("name");
@@ -204,7 +199,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
 
         context = getApplicationContext();
         dBhelper = new DBHelper(context);
-        generaOptions = new GeneraOptions();
 
         Bundle bundle = getIntent().getBundleExtra("animeInfo");
         animeId = bundle.getString("anime_id", "1");

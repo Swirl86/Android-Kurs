@@ -22,7 +22,7 @@ public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewLi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView titleValue, episodesValue, synopsisValue, airingValue, scoreValue;
-        private MaterialButton urlValue;
+        private MaterialButton urlValue, infoValue;
         private ImageView imageAnime;
 
         private ListItemClickListener clickListener;
@@ -36,14 +36,16 @@ public class RecyclerviewListAdapter extends RecyclerView.Adapter<RecyclerviewLi
             airingValue = itemView.findViewById(R.id.airingValue);
             scoreValue = itemView.findViewById(R.id.scoreValue);
             urlValue = itemView.findViewById(R.id.urlValue);
+            infoValue = itemView.findViewById(R.id.infoValue);
             clickListener = onAnimeClickListener;
 
             itemView.setOnClickListener(this);
+            infoValue.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
+            int position = getAbsoluteAdapterPosition();
             clickListener.onAnimeClick(position);
         }
 

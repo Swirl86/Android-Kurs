@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class AnimeFavoritesActivity extends OptionsMenuActivity implements RecyclerviewListAdapter.ListItemClickListener {
 
-    public static Context context = null;
+    public Context context;
     private DBHelper dBhelper;
     private RecyclerView recyclerView;
     private RecyclerviewListAdapter recyclerviewListAdapter;
@@ -28,7 +28,6 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     private FloatingActionButton scrollUp;
 
     private ArrayList<AnimeObject> animeObjects;
-    //private AnimeObject animeObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +65,6 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                   /* Toast.makeText(AnimeFavoritesActivity.this,
-                                            "\uD83D\uDC96", Toast.LENGTH_SHORT).show();*/
                                     dialog.cancel();
                                 }
                             });
@@ -104,31 +101,26 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     }
 
     private void initValues() {
-
-        animeObjects = new ArrayList<>();
-
-        deleteButton = findViewById(R.id.deleteButton);
-
-        scrollUp = findViewById(R.id.scrollUpFavorites);
-        scrollUp.setVisibility(View.GONE);
-
         context = getApplicationContext();
         dBhelper = new DBHelper(context);
 
         recyclerView = findViewById(R.id.favoriteListRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        animeObjects = new ArrayList<>();
+
+        deleteButton = findViewById(R.id.deleteButton);
+        scrollUp = findViewById(R.id.scrollUpFavorites);
+        scrollUp.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onAnimeClick(int position) {
-        //Toast.makeText(MainActivity.context, animeObjects.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
         Bundle bundle = new Bundle();
         bundle.putString("anime_id", animeObjects.get(position).animeId);
-        bundle.putString("data_type", "top"); // TODO if more types are added update here
-
+        bundle.putString("data_type", "top");
         Intent intent = new Intent(context, AnimeDetailsActivity.class);
-        //intent.putExtra("anime_id", animeObjects.get(position).animeId);
         intent.putExtra("animeInfo", bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
