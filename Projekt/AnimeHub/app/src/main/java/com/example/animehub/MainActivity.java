@@ -33,8 +33,11 @@ import org.json.JSONObject;
 
 public class MainActivity extends OptionsMenuActivity {
 
+    private final String KEY_SEARCH_STATE = "search_state";
     // Maintain the state of recyclerview
-    private String KEY_RECYCLE_STATE = "recycle_state";
+    private final String KEY_RECYCLE_STATE = "recycle_state";
+    private final String KEY_RECYCLE_POSITION = "recycle_position";
+    private int mPosition = RecyclerView.NO_POSITION;
 
     private Bundle bundleRecyclerViewState;
     private Parcelable recyclerListState;
@@ -58,9 +61,9 @@ public class MainActivity extends OptionsMenuActivity {
     public long newRequestTimeStamp;
     private Boolean firstSearch;
 
-    // Static so AnimeListHandler can use Context
-    public static Context context = null;
+    public Context context;
     private Intent intent;
+    private LinearLayoutManager layoutManager;
     private RecyclerView recyclerView;
     private RecyclerviewListAdapter recyclerviewListAdapter;
 
@@ -76,6 +79,7 @@ public class MainActivity extends OptionsMenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initValues();
         callChosenSearch();
 
@@ -84,7 +88,8 @@ public class MainActivity extends OptionsMenuActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH && validTimeRange() && validInput()) {
                     String input = searchBar.getText().toString();
-                    searchType.setText("Search Result For " + input);
+                    String searchTypeTitle = "Search Result For " + input;
+                    searchType.setText(searchTypeTitle);
                     doSearch(animeTitleSearch, input);
                     dismissKeyboard();
                     recyclerView.requestFocus();
@@ -96,7 +101,6 @@ public class MainActivity extends OptionsMenuActivity {
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int x, int y) {
                 // y is the change in the vertical scroll position
@@ -107,11 +111,6 @@ public class MainActivity extends OptionsMenuActivity {
                     //scroll down
                     scrollUp.setVisibility(View.VISIBLE);
                 }
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
             }
         });
 
@@ -127,18 +126,22 @@ public class MainActivity extends OptionsMenuActivity {
     }
 
     private void callChosenSearch() {
+        String title = "";
         searchBar.setText("");
         switch (bundleSearchType) {
             case "action_ongoing":
-                searchType.setText("Current Ongoing Anime");
+                title = "Current Ongoing Anime";
+                searchType.setText(title);
                 doSearch(ongoingAnimeSearch, "");
                 break;
             case "action_popular":
-                searchType.setText("Highest Ranked Anime");
+                title = "Highest Ranked Anime";
+                searchType.setText(title);
                 doSearch(popularAnimeSearch, "");
                 break;
             default:
-                searchType.setText("Upcoming Anime");
+                title = "Upcoming Anime";
+                searchType.setText(title);
                 doSearch(topUpcomingAnimeSearch, "");
         }
     }
@@ -161,7 +164,7 @@ public class MainActivity extends OptionsMenuActivity {
                             String valueType = type.equals(animeTitleSearch) ||
                                     type.equals(popularAnimeSearch) ? "results" : "top";
                             JSONArray results = response.getJSONArray(valueType);
-                            new AnimeListHandler(results, recyclerView, valueType);
+                            new AnimeListHandler(context, results, recyclerView, valueType);
                             progressBar.setVisibility(View.GONE);
 
                         } catch (JSONException e) {
@@ -212,7 +215,8 @@ public class MainActivity extends OptionsMenuActivity {
         firstSearch = true;
 
         recyclerView = findViewById(R.id.mainSearchRecycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerviewListAdapter = new RecyclerviewListAdapter();
         recyclerView.setAdapter(recyclerviewListAdapter);
         searchBar = findViewById(R.id.searchBar);
@@ -224,12 +228,12 @@ public class MainActivity extends OptionsMenuActivity {
         scrollUp = findViewById(R.id.scrollUpMain);
         scrollUp.setVisibility(View.GONE);
 
+        // Menu search option clicked, sends type with bundle
         if (intent.hasExtra("search_type")) {
             bundleSearchType = intent.getExtras().getString("search_type", "");
         } else {
             bundleSearchType = "";
         }
-
     }
 
     @Override
@@ -253,15 +257,13 @@ public class MainActivity extends OptionsMenuActivity {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        //   Log.d("STATE CHECK", "onSaveInstanceState " + savedInstanceState);
+        savedInstanceState.putString(KEY_SEARCH_STATE, searchBar.getText().toString());
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString("searchInput", searchBar.getText().toString());
     }
 
     @Override
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        //Log.d("STATE CHECK", "onRestoreInstanceState " + savedInstanceState);
-        searchBar.setText(savedInstanceState.getString("searchInput"));
+        searchBar.setText(savedInstanceState.getString(KEY_SEARCH_STATE));
         super.onSaveInstanceState(savedInstanceState);
     }
 

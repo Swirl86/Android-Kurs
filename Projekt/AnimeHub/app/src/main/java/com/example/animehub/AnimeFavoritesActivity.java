@@ -33,7 +33,6 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_favorites);
-
         initValues();
 
         animeObjects = dBhelper.getAnimeList(animeObjects);
@@ -45,7 +44,7 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
             public void onClick(View v) {
                 if (dBhelper.isEmpty()) {
                     Toast.makeText(AnimeFavoritesActivity.this,
-                            "Nothing to delete.", Toast.LENGTH_SHORT).show();
+                            "Nothing to delete \u274c", Toast.LENGTH_SHORT).show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AnimeFavoritesActivity.this);
                     builder.setMessage("Do you want to delete the list?").setCancelable(false)
@@ -54,11 +53,12 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
                                 public void onClick(DialogInterface dialog, int which) {
                                     dBhelper.deleteAllObjects();
                                     Toast.makeText(AnimeFavoritesActivity.this,
-                                            "List is deleted \uD83D\uDC4D", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                            "List is deleted \uD83D\uDC4D \ud83d\uddd1\ufe0f", Toast.LENGTH_SHORT).show();
                                     intent = new Intent(context, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    // Clear Activity stack
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
+                                    finish();
                                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                                 }
                             })
@@ -113,6 +113,14 @@ public class AnimeFavoritesActivity extends OptionsMenuActivity implements Recyc
         scrollUp = findViewById(R.id.scrollUpFavorites);
         scrollUp.setVisibility(View.GONE);
 
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        // If an anime has been removed from list then back button is clicked, this will update the view to the changes
+        finish();
+        startActivity(getIntent());
     }
 
     @Override

@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_IMAGE_URL = "image_url";
     private static final String KEY_TITLE = "title";
     private static final String KEY_EPISODES = "episodes";
-    private static final String KEY_SYNOPSIS = "start_date";
+    private static final String KEY_SYNOPSIS = "synopsis";
     private static final String KEY_AIRING = "airing";
     private static final String KEY_SCORE = "score";
     private static final String KEY_URL = "url";
@@ -67,12 +67,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
         contentValues.put(KEY_URL, object.getUrl());
 
-        long result = -1;
-
-        result = db.insert(TABLE_ANIME, null, contentValues);
+        long result = db.insert(TABLE_ANIME, null, contentValues);
 
         // -1 something went wrong
-        return result == -1 ? false : true;
+        return result != -1;
     }
 
     public boolean isNumeric(String str) {
@@ -90,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_ANIME_ID + " = ?", new String[]{location});
 
         // Found a match?
-        return cursor.getCount() > 0 ? true : false;
+        return cursor.getCount() > 0;
     }
 
     public ArrayList<AnimeObject> getAnimeList(ArrayList<AnimeObject> objects) {
@@ -142,7 +140,10 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(countAll, null);
         cursor.moveToNext();
 
-        return cursor.getString(0).equals("0");
+        Boolean result = cursor.getString(0).equals("0");
+        cursor.close();
+
+        return result;
     }
 
     public boolean deleteAnimeObject(String animeId) {

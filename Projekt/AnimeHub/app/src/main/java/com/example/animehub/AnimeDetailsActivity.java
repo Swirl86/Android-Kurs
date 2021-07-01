@@ -7,13 +7,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -63,13 +61,19 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
             public void onClick(View v) {
                 if (dBhelper.detailsExists(animeId)) {
                     favoriteButton.setIconTintResource(R.color.white);
-                    dBhelper.deleteAnimeObject(animeId);
+                    Boolean deleted = dBhelper.deleteAnimeObject(animeId);
+                    String toastMsg = deleted ? "Removed from list \ud83d\uddd1\ufe0f" :
+                            "\u26a0\ufe0f Something went wrong \u26a0\ufe0f";
+                    Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show();
                 } else {
                     favoriteButton.setIconTintResource(R.color.red);// Create table entry
                     AnimeObject details = new AnimeObject(animeId, imageUrl, title,
                             episodes, synopsis, airing, score, url);
 
-                    dBhelper.insertAnimeDetails(details);
+                    Boolean created = dBhelper.insertAnimeDetails(details);
+                    String toastMsg = created ? "Added to list \ud83d\udc96" :
+                            "\u26a0\ufe0f Something went wrong \u26a0\ufe0f";
+                    Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -101,7 +105,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                                 score = "Status: " + response.getString("status");
                                 episodes = episodes.equals("null") ? "?" : episodes;
                             } else {
-                                airing = response.getString("airing") == "true" ? "Ongoing" : "Not Ongoing";
+                                airing = response.getString("airing").equals("true") ? "Ongoing" : "Not Ongoing";
                                 score = getNotNullValue(response.getString("score"));
                                 episodes = getNotNullValue(episodes);
                             }
@@ -141,8 +145,8 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
     private void setGenres(JSONArray genres) throws JSONException {
         JSONObject genreJSONObject;
         Chip genre;
-        String type = "";
-        int id = -1;
+        String type;
+        int id;
 
         genresLayout.removeAllViews();
 
@@ -151,7 +155,7 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
 
             id = genreJSONObject.getInt("mal_id");
             type = genreJSONObject.getString("name");
-            genre = (Chip) new Chip(genresLayout.getContext());
+            genre = new Chip(genresLayout.getContext());
             genre.setId(id);
             genre.setText(type);
             genre.setChipBackgroundColor(ColorStateList.valueOf(getRandomColor()));
@@ -166,7 +170,6 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
                     bundle.putString("genre_type", type);
 
                     intent = new Intent(context, AnimeGenresActivity.class);
-                    // intent.putExtra("genre", genre);
                     intent.putExtra("genreInfo", bundle);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -225,4 +228,17 @@ public class AnimeDetailsActivity extends OptionsMenuActivity {
             favoriteButton.setIconTintResource(R.color.red);
         }
     }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        // Keep heart color correctly updated if an anime has been deleted after been
+        // clicked on from AnimeFavoritesActivity then back button been clicked
+        if (dBhelper.detailsExists(animeId)) {
+            favoriteButton.setIconTintResource(R.color.red);
+        } else {
+            favoriteButton.setIconTintResource(R.color.white);
+        }
+    }
+
 }
