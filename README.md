@@ -23,10 +23,17 @@
       - Set up that the weather data received can be saved to check later (Hint SQLite)
   
 
-- **Projekt** : 
-    - SOMTHING
-    - *Bonus goal* :
-      - SOMTHING
+- **Projekt** - Anime Hub: 
+    - Anime Hub is an anime wiki application inspired by MyAnimeList and uses [jikan.moe](https://jikan.moe/) which is an "open-source PHP & REST API". Jikan.moa scrapes / analyzes the website, [MyAnimeList.net](https://myanimelist.net/), to meet the need for an API.
+    - *Functionality* :
+      - Search by title
+      - Anime details page
+      - Related genre list, clickable for genre search
+      - Clickable search options from menu: Ongoing, Upcoming and Most Popular
+      - Add anime to favorite list
+      - View favorite list
+      - Remove anime from favorite list
+      - Delete favorite list
 
 
 ## Kursen omfattar följande moment:
